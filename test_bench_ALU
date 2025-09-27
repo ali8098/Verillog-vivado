@@ -1,0 +1,51 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: NED University
+// Engineer: Ali Hyder Khan
+// 
+// Create Date: 09/27/2025 10:19:05 AM
+// Design Name: ALU
+// Module Name: test_bench_ALU
+// Project Name: ALU_test_bench
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module test_bench_ALU;
+    reg [7:0] A,B;
+    reg [2:0] select;
+    wire [7:0] x;
+    wire [3:0] flag;
+    
+     ALU uut (  
+        .A(A),
+        .B(B),
+        .select(select),
+        .x(x),
+        .flag(flag)
+        );
+    
+    initial begin 
+        A=8'd10; B = 8'd5;
+        select = 3'b000; #10; //Addition
+        select = 3'b001; #10; //SUbtraction
+        select = 3'b010; #10; // AND
+        select = 3'b011; #10; // OR
+        select = 3'b100; #10; // XOR
+        select = 3'b101; #10; // NOT(only A)
+        select = 3'b110; #10; // logical shift left (only A by 1)
+        select = 3'b111; #10; // logical shift right (only A by 1)
+        
+        $finish;
+    end
+
+endmodule
