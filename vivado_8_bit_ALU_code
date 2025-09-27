@@ -1,0 +1,95 @@
+//////////////////////////////////////////////////////////////////////////////////
+// Company: NED university
+// Engineer: Ali Hyder Khan
+// 
+// Create Date: 09/24/2025 11:11:01 PM
+// Design Name: ALU
+// Module Name: ALU
+// Project Name: ALU_8_bit
+// Target Devices: 
+// Tool Versions: 
+// Description: 8-bit ALU with basic arithmetic, logic, and shift operations
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+module ALU(
+    input wire [7:0] A,
+    input wire [7:0] B,
+    input wire [2:0] select,
+    output reg [7:0] result,
+    output reg [3:0] flag
+);
+
+    reg [8:0] temp;
+    
+    always @(A or B or select)
+    begin
+        flag   = 4'b0000;
+        result = 8'b00000000;
+        temp   = 9'b000000000;
+
+        case (select)
+            3'b000: // Addition
+            begin
+                temp   = A + B;
+                result = temp[7:0];
+            end
+
+            3'b001: // Subtraction
+            begin
+                temp   = A - B;
+                result = temp[7:0];
+            end
+
+            3'b010: // AND
+            begin
+                temp   = A & B;
+                result = temp[7:0];
+            end
+
+            3'b011: // OR
+            begin
+                temp   = A | B;
+                result = temp[7:0];
+            end
+
+            3'b100: // XOR
+            begin
+                temp   = A ^ B;
+                result = temp[7:0];
+            end
+
+            3'b101: // NOT (only A)
+            begin
+                temp   = ~A;
+                result = temp[7:0];
+            end
+
+            3'b110: // LSL (Logical Shift Left A by 1)
+            begin
+                temp   = A << 1;
+                result = temp[7:0];
+            end
+
+            3'b111: // LSR (Logical Shift Right A by 1)
+            begin
+                temp   = A >> 1;
+                result = temp[7:0];
+            end
+        endcase
+
+        // Flags
+        flag[2] = (result == 8'b00000000);          // Zero flag
+        flag[1] = temp[8];                          // Carry flag (for shifts, this is MSB/LSB shifted out)
+        flag[0] = result[7];                        // Sign flag
+        flag[3] = (A[7] == B[7]) && (result[7] != A[7]); // Overflow (only valid for add/sub)
+    end
+
+endmodule
+
